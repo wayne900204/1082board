@@ -17,7 +17,6 @@ public class articleSQL extends SQLiteOpenHelper {
     private static final String TAG = "articleSQL";
     public static int version = 1;//版本
     public static String ARTICLEBOARD = "articleboard";//資料庫名稱
-
     public articleSQL(@Nullable Context context) {
         super(context, DATEBASE_NAME, null, version);
     }
@@ -32,7 +31,7 @@ public class articleSQL extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {//更新用的
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {//更新版本用的
 //              ContentValues values = new ContentValues();
 //              values.put("");
             db.execSQL(" DROP TABLE IF EXISTS "+ARTICLEBOARD);
@@ -46,8 +45,16 @@ public class articleSQL extends SQLiteOpenHelper {
         long date = getWritableDatabase().insert(ARTICLEBOARD,null,cv);
         return date;
     }
-    public boolean DELETEDATE(String title){
+    public long upDate(String title,String article,int position) {//更新資料用的
+        ContentValues cv = new ContentValues();
+        Log.d(TAG, "upDate: "+ title +"  "+ article+" "+position);
 
+        cv.put("Title", title);
+        cv.put("Article",article);
+        long update = getWritableDatabase().update(ARTICLEBOARD,cv,"id="+position,null);
+        return update;
+    }
+    public boolean DELETEDATE(String title){
         long num = getWritableDatabase().delete(ARTICLEBOARD,"TITLE='"+title+"'",null);
         //注意這邊字串裡面會有 TITLE='   '這個'要記得，所以
         if(num!=0)
